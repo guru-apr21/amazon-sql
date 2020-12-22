@@ -1,7 +1,12 @@
 const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('categories', {
-    category_id: {
+module.exports = (sequelize, DataTypes) => {
+  return OrderStatus.init(sequelize, DataTypes);
+}
+
+class OrderStatus extends Sequelize.Model {
+  static init(sequelize, DataTypes) {
+  super.init({
+    order_status_id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -13,7 +18,7 @@ module.exports = function(sequelize, DataTypes) {
     }
   }, {
     sequelize,
-    tableName: 'categories',
+    tableName: 'order_statuses',
     timestamps: false,
     indexes: [
       {
@@ -21,9 +26,11 @@ module.exports = function(sequelize, DataTypes) {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "category_id" },
+          { name: "order_status_id" },
         ]
       },
     ]
   });
-};
+  return OrderStatus;
+  }
+}

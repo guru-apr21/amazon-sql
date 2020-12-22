@@ -1,6 +1,11 @@
 const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('roles', {
+module.exports = (sequelize, DataTypes) => {
+  return Role.init(sequelize, DataTypes);
+}
+
+class Role extends Sequelize.Model {
+  static init(sequelize, DataTypes) {
+  super.init({
     role_id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
@@ -26,4 +31,6 @@ module.exports = function(sequelize, DataTypes) {
       },
     ]
   });
-};
+  return Role;
+  }
+}

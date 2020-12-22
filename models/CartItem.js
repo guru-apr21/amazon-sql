@@ -1,6 +1,11 @@
 const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('cart_items', {
+module.exports = (sequelize, DataTypes) => {
+  return CartItem.init(sequelize, DataTypes);
+}
+
+class CartItem extends Sequelize.Model {
+  static init(sequelize, DataTypes) {
+  super.init({
     quantity: {
       type: DataTypes.SMALLINT,
       allowNull: false
@@ -57,4 +62,6 @@ module.exports = function(sequelize, DataTypes) {
       },
     ]
   });
-};
+  return CartItem;
+  }
+}

@@ -1,60 +1,60 @@
 var DataTypes = require("sequelize").DataTypes;
-var _cart_items = require("./cart_items");
-var _carts = require("./carts");
-var _categories = require("./categories");
-var _order_items = require("./order_items");
-var _order_statuses = require("./order_statuses");
-var _orders = require("./orders");
-var _products = require("./products");
-var _roles = require("./roles");
-var _users = require("./users");
+var _CartItem = require("./CartItem");
+var _Cart = require("./Cart");
+var _Category = require("./Category");
+var _OrderItem = require("./OrderItem");
+var _OrderStatus = require("./OrderStatus");
+var _Order = require("./Order");
+var _Product = require("./Product");
+var _Role = require("./Role");
+var _User = require("./User");
 
 function initModels(sequelize) {
-  var cart_items = _cart_items(sequelize, DataTypes);
-  var carts = _carts(sequelize, DataTypes);
-  var categories = _categories(sequelize, DataTypes);
-  var order_items = _order_items(sequelize, DataTypes);
-  var order_statuses = _order_statuses(sequelize, DataTypes);
-  var orders = _orders(sequelize, DataTypes);
-  var products = _products(sequelize, DataTypes);
-  var roles = _roles(sequelize, DataTypes);
-  var users = _users(sequelize, DataTypes);
+  var CartItem = _CartItem(sequelize, DataTypes);
+  var Cart = _Cart(sequelize, DataTypes);
+  var Category = _Category(sequelize, DataTypes);
+  var OrderItem = _OrderItem(sequelize, DataTypes);
+  var OrderStatus = _OrderStatus(sequelize, DataTypes);
+  var Order = _Order(sequelize, DataTypes);
+  var Product = _Product(sequelize, DataTypes);
+  var Role = _Role(sequelize, DataTypes);
+  var User = _User(sequelize, DataTypes);
 
-  products.belongsToMany(carts, { through: cart_items, foreignKey: "product_id", otherKey: "cart_id" });
-  carts.belongsToMany(products, { through: cart_items, foreignKey: "cart_id", otherKey: "product_id" });
-  products.belongsToMany(orders, { through: order_items, foreignKey: "product_id", otherKey: "order_id" });
-  orders.belongsToMany(products, { through: order_items, foreignKey: "order_id", otherKey: "product_id" });
-  cart_items.belongsTo(carts, { foreignKey: "cart_id"});
-  carts.hasMany(cart_items, { foreignKey: "cart_id"});
-  cart_items.belongsTo(products, { foreignKey: "product_id"});
-  products.hasMany(cart_items, { foreignKey: "product_id"});
-  carts.belongsTo(users, { foreignKey: "user_id"});
-  users.hasMany(carts, { foreignKey: "user_id"});
-  order_items.belongsTo(orders, { foreignKey: "order_id"});
-  orders.hasMany(order_items, { foreignKey: "order_id"});
-  order_items.belongsTo(products, { foreignKey: "product_id"});
-  products.hasMany(order_items, { foreignKey: "product_id"});
-  orders.belongsTo(order_statuses, { foreignKey: "status"});
-  order_statuses.hasMany(orders, { foreignKey: "status"});
-  orders.belongsTo(users, { foreignKey: "user_id"});
-  users.hasMany(orders, { foreignKey: "user_id"});
-  products.belongsTo(categories, { foreignKey: "category_id"});
-  categories.hasMany(products, { foreignKey: "category_id"});
-  products.belongsTo(users, { foreignKey: "user_id"});
-  users.hasMany(products, { foreignKey: "user_id"});
-  users.belongsTo(roles, { foreignKey: "role_id"});
-  roles.hasMany(users, { foreignKey: "role_id"});
+  Product.belongsToMany(Cart, { through: CartItem, foreignKey: "product_id", otherKey: "cart_id" });
+  Cart.belongsToMany(Product, { through: CartItem, foreignKey: "cart_id", otherKey: "product_id" });
+  Product.belongsToMany(Order, { through: OrderItem, foreignKey: "product_id", otherKey: "order_id" });
+  Order.belongsToMany(Product, { through: OrderItem, foreignKey: "order_id", otherKey: "product_id" });
+  CartItem.belongsTo(Cart, { foreignKey: "cart_id"});
+  Cart.hasMany(CartItem, { foreignKey: "cart_id"});
+  CartItem.belongsTo(Product, { foreignKey: "product_id"});
+  Product.hasMany(CartItem, { foreignKey: "product_id"});
+  Cart.belongsTo(User, { foreignKey: "user_id"});
+  User.hasMany(Cart, { foreignKey: "user_id"});
+  OrderItem.belongsTo(Order, { foreignKey: "order_id"});
+  Order.hasMany(OrderItem, { foreignKey: "order_id"});
+  OrderItem.belongsTo(Product, { foreignKey: "product_id"});
+  Product.hasMany(OrderItem, { foreignKey: "product_id"});
+  Order.belongsTo(OrderStatus, { foreignKey: "status"});
+  OrderStatus.hasMany(Order, { foreignKey: "status"});
+  Order.belongsTo(User, { foreignKey: "user_id"});
+  User.hasMany(Order, { foreignKey: "user_id"});
+  Product.belongsTo(Category, { foreignKey: "category_id"});
+  Category.hasMany(Product, { foreignKey: "category_id"});
+  Product.belongsTo(User, { foreignKey: "user_id"});
+  User.hasMany(Product, { foreignKey: "user_id"});
+  User.belongsTo(Role, { foreignKey: "role_id"});
+  Role.hasMany(User, { foreignKey: "role_id"});
 
   return {
-    cart_items,
-    carts,
-    categories,
-    order_items,
-    order_statuses,
-    orders,
-    products,
-    roles,
-    users,
+    CartItem,
+    Cart,
+    Category,
+    OrderItem,
+    OrderStatus,
+    Order,
+    Product,
+    Role,
+    User,
   };
 }
 module.exports = initModels;
