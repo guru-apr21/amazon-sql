@@ -1,12 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const { sequelize } = require('../models');
-const db = require('../models/init-models')(sequelize);
+// const db = require('../models/init-models')(sequelize);
+// const { initModels } = require('../models/init-models');
+// const db = initModels(sequelize);
+const db = require('../models');
 
 router.get('/', async (req, res, next) => {
   try {
     const roles = await db.Role.findAll({ include: db.User });
     res.json(roles);
+    // console.log(db);
+    res.end();
   } catch (error) {
     console.log(error);
     res.status(500).json('Something went wrong!');
