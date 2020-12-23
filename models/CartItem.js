@@ -14,15 +14,6 @@ class CartItem extends Sequelize.Model {
       type: DataTypes.DECIMAL(9,2),
       allowNull: false
     },
-    cart_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true,
-      references: {
-        model: 'carts',
-        key: 'cart_id'
-      }
-    },
     product_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -30,6 +21,15 @@ class CartItem extends Sequelize.Model {
       references: {
         model: 'products',
         key: 'product_id'
+      }
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      references: {
+        model: 'users',
+        key: 'user_id'
       }
     }
   }, {
@@ -42,15 +42,8 @@ class CartItem extends Sequelize.Model {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "cart_id" },
           { name: "product_id" },
-        ]
-      },
-      {
-        name: "fk_cart_items_carts1_idx",
-        using: "BTREE",
-        fields: [
-          { name: "cart_id" },
+          { name: "user_id" },
         ]
       },
       {
@@ -58,6 +51,13 @@ class CartItem extends Sequelize.Model {
         using: "BTREE",
         fields: [
           { name: "product_id" },
+        ]
+      },
+      {
+        name: "fk_cart_items_users1_idx",
+        using: "BTREE",
+        fields: [
+          { name: "user_id" },
         ]
       },
     ]
