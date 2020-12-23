@@ -92,4 +92,15 @@ class User extends Sequelize.Model {
     });
     return schema.validate(value);
   }
+
+  static validateSignUp(value) {
+    const schema = Joi.object({
+      first_name: Joi.string().max(50).required(),
+      last_name: Joi.string().max(50).required(),
+      email: Joi.string().email().required(),
+      password: Joi.string().required(),
+      role_id: Joi.number().min(1).max(3),
+    });
+    return schema.validate(value);
+  }
 }
