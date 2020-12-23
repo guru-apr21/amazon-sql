@@ -27,11 +27,17 @@ class User extends Sequelize.Model {
     },
     date_registered: {
       type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+    },
+    encrypted_password: {
+      type: DataTypes.STRING(255),
       allowNull: false
     },
     role_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      defaultValue: 2,
       references: {
         model: 'roles',
         key: 'role_id'
