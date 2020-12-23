@@ -1,8 +1,8 @@
 const express = require('express');
 const app = express();
 
-const roleRouter = require('./routes/roles');
-const userRouter = require('./routes/users');
+const roleRouter = require('./routes/roles.routes');
+const userRouter = require('./routes/users.routes');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
