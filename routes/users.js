@@ -4,15 +4,24 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const db = require('../models/init-models')(sequelize);
 const jwt = require('jsonwebtoken');
-const { Op, QueryTypes } = require('sequelize');
 
 router.post('/signup', async (req, res, next) => {
   try {
+    const { error } = db.User.validateSignUp(req.body);
+    if (error) {
+      return res.status(400).json({ error: error.details[0].message });
+    }
+
     const { first_name, last_name, email, password } = req.body;
+
+    let user = await db.User.findOne({ where: { email } });
+    if (user) {
+      return res.status(409).json({ error: 'User already exists!' });
+    }
 
     const encrypted_password = await bcrypt.hash(password, 10);
 
-    let user = db.User.build({
+    user = db.User.build({
       first_name,
       last_name,
       email,
@@ -20,24 +29,23 @@ router.post('/signup', async (req, res, next) => {
     });
 
     user = await user.save();
-    const token = jwt.sign(
-      { user_id: user.user_id, email: user.email },
-      'jwtsecretkey',
-      {
-        expiresIn: '48h',
-      }
-    );
+    const token = user.genAuthToken();
 
     console.log(user.toJSON());
     res.json({ token });
   } catch (error) {
     console.log(error);
-    res.json({ error: 'Something went wrong!' });
+    res.status(500).json({ error: 'Something went wrong!' });
   }
 });
 
 router.post('/signin', async (req, res, next) => {
   try {
+    const { error } = db.User.validateSignIn(req.body);
+    if (error) {
+      return res.status(400).json({ error: error.details[0].message });
+    }
+
     const { email, password } = req.body;
 
     const user = await db.User.findOne({ where: { email } });
@@ -51,13 +59,8 @@ router.post('/signin', async (req, res, next) => {
       return res.status(401).json({ error: 'Invalid credentials!' });
     }
 
-    const token = jwt.sign(
-      { user_id: user.user_id, email: user.email },
-      'jwtsecretkey',
-      {
-        expiresIn: '48h',
-      }
-    );
+    const token = user.genAuthToken();
+
     res.json({ token });
   } catch (error) {
     res.json('Something went wrong!');
@@ -68,7 +71,6 @@ router.post('/signin', async (req, res, next) => {
 router.get('/', async (req, res, next) => {
   try {
     const users = await db.User.findAll({
-      where: { '$Role.name$': { [Op.eq]: 'buyer' } },
       include: { model: db.Role },
       attributes: ['first_name', 'last_name', 'email', 'date_registered'],
     });
