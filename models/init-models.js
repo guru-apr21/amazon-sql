@@ -1,6 +1,5 @@
 var DataTypes = require("sequelize").DataTypes;
 var _CartItem = require("./CartItem");
-var _Cart = require("./Cart");
 var _Category = require("./Category");
 var _OrderItem = require("./OrderItem");
 var _OrderStatus = require("./OrderStatus");
@@ -11,7 +10,6 @@ var _User = require("./User");
 
 function initModels(sequelize) {
   var CartItem = _CartItem(sequelize, DataTypes);
-  var Cart = _Cart(sequelize, DataTypes);
   var Category = _Category(sequelize, DataTypes);
   var OrderItem = _OrderItem(sequelize, DataTypes);
   var OrderStatus = _OrderStatus(sequelize, DataTypes);
@@ -20,16 +18,14 @@ function initModels(sequelize) {
   var Role = _Role(sequelize, DataTypes);
   var User = _User(sequelize, DataTypes);
 
-  Product.belongsToMany(Cart, { through: CartItem, foreignKey: "product_id", otherKey: "cart_id" });
-  Cart.belongsToMany(Product, { through: CartItem, foreignKey: "cart_id", otherKey: "product_id" });
+  User.belongsToMany(Product, { through: CartItem, foreignKey: "user_id", otherKey: "product_id" });
+  Product.belongsToMany(User, { through: CartItem, foreignKey: "product_id", otherKey: "user_id" });
   Product.belongsToMany(Order, { through: OrderItem, foreignKey: "product_id", otherKey: "order_id" });
   Order.belongsToMany(Product, { through: OrderItem, foreignKey: "order_id", otherKey: "product_id" });
-  CartItem.belongsTo(Cart, { foreignKey: "cart_id"});
-  Cart.hasMany(CartItem, { foreignKey: "cart_id"});
   CartItem.belongsTo(Product, { foreignKey: "product_id"});
   Product.hasMany(CartItem, { foreignKey: "product_id"});
-  Cart.belongsTo(User, { foreignKey: "user_id"});
-  User.hasMany(Cart, { foreignKey: "user_id"});
+  CartItem.belongsTo(User, { foreignKey: "user_id"});
+  User.hasMany(CartItem, { foreignKey: "user_id"});
   OrderItem.belongsTo(Order, { foreignKey: "order_id"});
   Order.hasMany(OrderItem, { foreignKey: "order_id"});
   OrderItem.belongsTo(Product, { foreignKey: "product_id"});
@@ -47,7 +43,6 @@ function initModels(sequelize) {
 
   return {
     CartItem,
-    Cart,
     Category,
     OrderItem,
     OrderStatus,
