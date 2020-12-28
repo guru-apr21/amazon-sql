@@ -12,6 +12,20 @@ const getProducts = async (req, res, next) => {
   }
 };
 
+const getProductById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const product = await db.Product.findByPk(id);
+
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found!' });
+    }
+    res.json(product);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const createProduct = async (req, res, next) => {
   try {
     const { error } = db.Product.validateNewProduct(req.body);
@@ -71,4 +85,33 @@ const updateProduct = async (req, res, next) => {
   }
 };
 
-module.exports = { createProduct, updateProduct, getProducts };
+const deleteProduct = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    let product = await db.Product.findByPk(id);
+    if (!product) {
+      return res.status(404).json({ error: 'Product not found!' });
+    }
+
+    const { user_id, role_id } = req.loggedInUser;
+    const hasAccessToProduct = product.user_id === user_id && role_id !== 1;
+    if (!hasAccessToProduct) {
+      return res.status(403).json({ error: 'Access denied!' });
+    }
+
+    await product.destroy();
+    res.status(204).end();
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Something went wrong!' });
+  }
+};
+
+module.exports = {
+  getProducts,
+  getProductById,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+};
