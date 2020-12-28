@@ -40,7 +40,7 @@ class User extends Sequelize.Model {
         role_id: {
           type: DataTypes.INTEGER,
           allowNull: false,
-          defaultValue: 2,
+          defaultValue: 1,
           references: {
             model: 'roles',
             key: 'role_id',
