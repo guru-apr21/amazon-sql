@@ -1,4 +1,5 @@
 const { sequelize } = require('../models');
+const Category = require('../models/Category');
 
 const db = require('../models/init-models')(sequelize);
 
@@ -21,4 +22,20 @@ const createCategory = async (req, res, next) => {
   }
 };
 
-module.exports = { createCategory, getCategories };
+const updateCategory = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const { name } = req.body;
+
+    let category = await db.Category.findByPk(id);
+    category.name = name;
+    category = await category.save();
+
+    res.send(category);
+  } catch (error) {
+    console.log(error);
+    res.end();
+  }
+};
+
+module.exports = { createCategory, getCategories, updateCategory };
