@@ -14,7 +14,8 @@ class Category extends Sequelize.Model {
     },
     name: {
       type: DataTypes.STRING(50),
-      allowNull: false
+      allowNull: false,
+      unique: "name_UNIQUE"
     }
   }, {
     sequelize,
@@ -27,6 +28,14 @@ class Category extends Sequelize.Model {
         using: "BTREE",
         fields: [
           { name: "category_id" },
+        ]
+      },
+      {
+        name: "name_UNIQUE",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "name" },
         ]
       },
     ]
