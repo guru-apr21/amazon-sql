@@ -9,25 +9,6 @@ router.post('/signup', userController.createUser);
 
 router.post('/signin', userController.signInUser);
 
-router.get('/', async (req, res, next) => {
-  try {
-    const users = await db.User.findAll({
-      include: { model: db.Role },
-      attributes: ['first_name', 'last_name', 'email', 'date_registered'],
-    });
-    // const users = await sequelize.query(
-    //   `
-    // SELECT u.first_name, u.last_name, r.name AS role
-    // FROM roles r
-    // LEFT JOIN users u
-    //   USING(role_id)
-    // WHERE r.name LIKE "%buyer%"`,
-    //   { type: QueryTypes.SELECT }
-    // );
-    res.json(users);
-  } catch (error) {
-    console.log(error);
-  }
-});
+router.get('/', userController.getUsers);
 
 module.exports = router;
