@@ -38,4 +38,21 @@ const updateCategory = async (req, res, next) => {
   }
 };
 
-module.exports = { createCategory, getCategories, updateCategory };
+const deleteCategory = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const category = await db.Category.findByPk(id);
+    await category.destroy();
+    res.status(204).end();
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: 'Somthing went wrong' });
+  }
+};
+
+module.exports = {
+  createCategory,
+  getCategories,
+  updateCategory,
+  deleteCategory,
+};
